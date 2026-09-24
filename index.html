@@ -52,7 +52,7 @@
     transition: background .3s var(--ease), color .3s var(--ease);
   }
 
-  /* ============ Шапка (по умолчанию — розовая для Евы) ============ */
+  /* ============ Шапка ============ */
   .header {
     background: linear-gradient(135deg, #ec407a, #ad1457);
     background-size: 200% 200%;
@@ -123,7 +123,7 @@
   .avatar-btn:hover { transform: scale(1.08); box-shadow: 0 0 0 5px rgba(255,255,255,.25); }
   .avatar-btn svg { width: 100%; height: 100%; display: block; }
 
-  /* ============ Средний балл (у Евы скрыт) ============ */
+  /* ============ Средний балл ============ */
   .score-bar {
     background: var(--blue-soft);
     padding: 14px 28px;
@@ -165,11 +165,9 @@
     from { opacity: 0; transform: translateY(-8px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-  /* По умолчанию — розовая (Ева) */
   .now-bar.lesson { background: linear-gradient(135deg, #ec407a, #ad1457); color: #fff; }
   .now-bar.break  { background: linear-gradient(135deg, #ff7043, #d84315); color: #fff; }
   .now-bar.soon   { background: linear-gradient(135deg, #ab47bc, #6a1b9a); color: #fff; }
-  /* Синяя для Димы */
   .now-bar.dima.lesson { background: linear-gradient(135deg, #43a047, #2e7d32); }
   .now-bar.dima.break  { background: linear-gradient(135deg, #fb8c00, #ef6c00); }
   .now-bar.dima.soon   { background: linear-gradient(135deg, #1976d2, #0d47a1); }
@@ -262,7 +260,7 @@
   .tomorrow-hw .th-item .th-photo img:hover { transform: scale(1.08); }
   .tomorrow-hw .th-empty { color: var(--text-mute); font-style: italic; font-size: 13px; }
 
-  /* ============ Риск (у Евы скрыт) ============ */
+  /* ============ Риск ============ */
   .risk-bar {
     background: var(--orange-soft);
     border-bottom: 1px solid #ffe082;
@@ -327,7 +325,6 @@
     transition: .2s var(--ease);
     position: relative;
   }
-  /* По умолчанию (Ева) — розовая активная вкладка */
   .tab-btn.active {
     color: var(--primary);
     border-bottom-color: var(--primary);
@@ -336,7 +333,6 @@
   [data-theme="dark"] .tab-btn.active { background: var(--primary-soft); color: #f48fb1; }
   .tab-btn:hover { background: var(--primary-soft); }
   [data-theme="dark"] .tab-btn:hover { background: var(--primary-soft); }
-  /* Синяя активная вкладка для Димы */
   .tab-btn.dima.active { color: var(--blue); border-bottom-color: var(--blue); background: var(--blue-soft); }
   [data-theme="dark"] .tab-btn.dima.active { background: var(--blue-soft); color: #82b1ff; }
   .tab-btn.hidden { display: none; }
@@ -426,7 +422,7 @@
     padding: 0 8px;
   }
 
-  /* ============ Инфо о неделе ============ */
+  /* Инфо о неделе */
   .week-info {
     background: var(--primary-soft);
     padding: 12px 28px;
@@ -703,7 +699,6 @@
   }
   [data-theme="dark"] .schedule-table th,
   [data-theme="dark"] .schedule-table td { border-color: var(--border); }
-  /* По умолчанию — розовая шапка (Ева) */
   .schedule-table th {
     background: linear-gradient(180deg, #fce4ec, #f5f7fa);
     color: var(--primary-dark);
@@ -716,7 +711,6 @@
     background: var(--primary-soft);
     color: #f48fb1;
   }
-  /* Синяя шапка для Димы */
   .schedule-table.dima th {
     background: linear-gradient(180deg, #e3f2fd, #f5f7fa);
     color: var(--blue);
@@ -920,6 +914,8 @@
     box-shadow: var(--shadow-lg);
     animation: pop .25s var(--ease);
     color: var(--text);
+    display: flex;
+    flex-direction: column;
   }
   @keyframes pop {
     from { transform: scale(.9); opacity: 0; }
@@ -1240,9 +1236,7 @@
     transform: translateY(-2px);
     box-shadow: var(--shadow-sm);
   }
-  .family-item.dima {
-    background: #f5f9ff;
-  }
+  .family-item.dima { background: #f5f9ff; }
   [data-theme="dark"] .family-item.dima { background: #202a3d; }
   .family-item.dima:hover {
     background: var(--blue-soft);
@@ -1250,14 +1244,8 @@
     transform: translateY(-2px);
     box-shadow: var(--shadow-sm);
   }
-  .family-item.eva.active {
-    border-color: var(--primary);
-    background: #f8bbd0;
-  }
-  .family-item.dima.active {
-    border-color: var(--blue);
-    background: var(--blue-soft);
-  }
+  .family-item.eva.active { border-color: var(--primary); background: #f8bbd0; }
+  .family-item.dima.active { border-color: var(--blue); background: var(--blue-soft); }
 
   .family-item .fam-avatar {
     width: 56px; height: 56px;
@@ -1525,6 +1513,150 @@
   ::-webkit-scrollbar-thumb { background: #c5cdd6; border-radius: 999px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
   [data-theme="dark"] ::-webkit-scrollbar-thumb { background: #3a4a60; }
+
+  /* ============================================================
+     ============ МОБИЛЬНЫЕ ПРАВКИ ДЛЯ МОДАЛОК ==================
+     ============ Открытие сверху, крупные кнопки ===============
+     ============================================================ */
+  @media (max-width: 720px) {
+    /* Модалки открываются ВЫШЕ и не по центру */
+    .modal-bg {
+      align-items: flex-start;
+      padding: 8px 8px;
+    }
+    .modal {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      max-height: calc(100vh - 16px);
+      padding: 18px 16px;
+      border-radius: 14px;
+      margin-top: 0;
+      animation: popMobile .28s var(--ease);
+      display: flex;
+      flex-direction: column;
+    }
+    @keyframes popMobile {
+      from { transform: translateY(-24px) scale(.96); opacity: 0; }
+      to   { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    /* Профиль — компактнее и выше */
+    .profile-modal {
+      padding: 20px 18px 18px;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      max-height: calc(100vh - 16px);
+    }
+    .profile-modal .profile-avatar-big {
+      width: 100px;
+      height: 100px;
+      margin-bottom: 12px;
+      border-width: 3px;
+      animation: none;
+    }
+    .profile-modal .profile-name {
+      font-size: 17px;
+      margin-bottom: 12px;
+    }
+    .profile-modal .profile-row {
+      padding: 8px 12px;
+      font-size: 13px;
+      margin-bottom: 6px;
+      border-radius: 6px;
+    }
+    .profile-modal .profile-row .pr-label { font-size: 12px; }
+    .profile-modal .profile-row .pr-value { font-size: 13px; }
+    .profile-modal .family-btn,
+    .profile-modal .profile-close {
+      padding: 9px 18px;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    /* Д/З — крупнее, кнопки внизу, скролл только для контента */
+    #hwModalBg .modal {
+      padding: 16px 14px;
+      max-height: calc(100vh - 16px);
+    }
+    #hwModalBg .modal h3 { font-size: 16px; margin-bottom: 4px; }
+    #hwModalBg .modal .sub { font-size: 12px; margin-bottom: 12px; }
+    #hwModalBg .modal textarea {
+      min-height: 70px;
+      font-size: 14px;
+      margin-bottom: 10px;
+      flex-shrink: 0;
+    }
+    #hwModalBg .hw-photo-area { margin-bottom: 12px; }
+    #hwModalBg .hw-photo-area .photo-label-row {
+      margin-bottom: 6px;
+    }
+    #hwModalBg .hw-photo-area .photo-label { font-size: 11px; }
+    #hwModalBg .gallery-btn {
+      padding: 8px 14px;
+      font-size: 13px;
+      width: 100%;
+      justify-content: center;
+    }
+    #hwModalBg .hw-photo-preview {
+      margin-top: 8px;
+      gap: 6px;
+    }
+    #hwModalBg .hw-photo-preview .thumb-wrap {
+      width: 68px; height: 68px;
+    }
+
+    /* Кнопки внизу — крупные и «липкие» */
+    #hwModalBg .modal .actions {
+      position: sticky;
+      bottom: 0;
+      background: var(--panel);
+      padding-top: 10px;
+      padding-bottom: 4px;
+      margin-top: auto;
+      gap: 6px;
+      border-top: 1px solid var(--border);
+    }
+    #hwModalBg .modal .actions .save-btn,
+    #hwModalBg .modal .actions .clear-btn,
+    #hwModalBg .modal .actions .cancel-btn {
+      flex: 1;
+      padding: 11px 8px;
+      font-size: 13px;
+      min-width: 0;
+    }
+
+    /* Другие модалки — тоже удобнее */
+    #modalBg .modal,
+    #qModalBg .modal,
+    #remindModalBg .modal,
+    #calModalBg .modal {
+      padding: 18px 16px;
+    }
+    #calModalBg .modal { min-width: 0; }
+    #calModalBg .cal-grid { gap: 4px; }
+    #calModalBg .cal-cell { padding: 8px 4px; font-size: 12px; }
+
+    /* Семья — компактнее */
+    .family-modal {
+      padding: 20px 16px 18px;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+    }
+    .family-modal h3 { font-size: 16px; }
+    .family-modal .sub { font-size: 12px; margin-bottom: 14px; }
+    .family-item {
+      padding: 10px 12px;
+      gap: 10px;
+      border-radius: 10px;
+    }
+    .family-item .fam-avatar { width: 44px; height: 44px; }
+    .family-item .fam-name { font-size: 14px; }
+    .family-item .fam-role { font-size: 11px; }
+    .family-close { padding: 9px 20px; font-size: 13px; }
+  }
 </style>
 </head>
 <body>
@@ -1558,7 +1690,7 @@
   </div>
 </div>
 
-<!-- ===== Средний балл (скрыт у Евы, покажется у Димы) ===== -->
+<!-- ===== Средний балл ===== -->
 <div class="score-bar hidden" id="scoreBar">
   <div>
     <span class="label">Общий средневзвешенный:</span>
@@ -1579,7 +1711,7 @@
   <span class="now-time" id="nowTime"></span>
 </div>
 
-<!-- ===== Блок риска (только для Димы) ===== -->
+<!-- ===== Блок риска ===== -->
 <div class="risk-bar" id="riskBar">
   <span class="risk-title">⚠ Внимание:</span>
   <div id="riskItems" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
@@ -1592,7 +1724,7 @@
   <button class="tab-btn hidden" id="tabBtnQuarters" onclick="switchTab('quarters', this)">🎓 Четвертные</button>
 </div>
 
-<!-- ==================== ВКЛАДКА ОЦЕНКИ (только для Димы) ==================== -->
+<!-- ==================== ВКЛАДКА ОЦЕНКИ ==================== -->
 <div class="tab-content" id="tab-grades">
   <div class="controls">
     <button class="btn green" onclick="downloadDiary()">💾 Скачать дневник</button>
@@ -1639,7 +1771,7 @@
   </div>
 </div>
 
-<!-- ==================== ВКЛАДКА ЧЕТВЕРТНЫЕ (только для Димы) ==================== -->
+<!-- ==================== ВКЛАДКА ЧЕТВЕРТНЫЕ ==================== -->
 <div class="tab-content" id="tab-quarters">
   <div class="table-wrap">
     <table class="quarters-table" id="quartersTable">
@@ -1891,8 +2023,7 @@ const WEIGHT_KR = 2;
 const QUARTER_WEIGHTS = { 1: 1, 2: 1, 3: 2, 4: 2 };
 const TARGET_AVG = 3.50;
 
-// ==================== ЗВОНКИ ====================
-// Ева (1 класс) — по умолчанию
+// Звонки Евы (1 класс)
 const BELLS_EVA = [
   { start: "08:30", end: "09:10" },
   { start: "09:25", end: "10:05" },
@@ -1900,7 +2031,7 @@ const BELLS_EVA = [
   { start: "11:15", end: "11:55" }
 ];
 
-// Дима (9 класс)
+// Звонки Димы (9 класс)
 const BELLS_DIMA = [
   { start: "08:30", end: "09:10" },
   { start: "09:30", end: "10:10" },
@@ -1978,9 +2109,8 @@ const DATES_BY_QUARTER_DEFAULT = {
   4: ["01.04","03.04","06.04","08.04","10.04","13.04","15.04","17.04","20.04","22.04","24.04","27.04","29.04","04.05","06.05"]
 };
 
-// Расписание Евы (1Б) — с Д/З, 4 урока в понедельник
+// Расписание Евы (1Б) — 4 урока в ПН, без кабинетов, учитель Любовь Евгеньевна
 const WEEK_SCHEDULE_EVA = [
-  // ПН
   [
     { subject: "Разговоры о важном", room: "", teacher: "Любовь Евгеньевна" },
     { subject: "Физкультура", room: "", teacher: "Любовь Евгеньевна" },
@@ -1990,7 +2120,6 @@ const WEEK_SCHEDULE_EVA = [
     { subject: "", room: "", teacher: "" },
     { subject: "", room: "", teacher: "" }
   ],
-  // ВТ
   [
     { subject: "Литература", room: "", teacher: "Любовь Евгеньевна" },
     { subject: "Математика", room: "", teacher: "Любовь Евгеньевна" },
@@ -2000,7 +2129,6 @@ const WEEK_SCHEDULE_EVA = [
     { subject: "", room: "", teacher: "" },
     { subject: "", room: "", teacher: "" }
   ],
-  // СР
   [
     { subject: "Физкультура", room: "", teacher: "Любовь Евгеньевна" },
     { subject: "Математика", room: "", teacher: "Любовь Евгеньевна" },
@@ -2010,7 +2138,6 @@ const WEEK_SCHEDULE_EVA = [
     { subject: "", room: "", teacher: "" },
     { subject: "", room: "", teacher: "" }
   ],
-  // ЧТ
   [
     { subject: "Литература", room: "", teacher: "Любовь Евгеньевна" },
     { subject: "Русский язык", room: "", teacher: "Любовь Евгеньевна" },
@@ -2020,7 +2147,6 @@ const WEEK_SCHEDULE_EVA = [
     { subject: "", room: "", teacher: "" },
     { subject: "", room: "", teacher: "" }
   ],
-  // ПТ
   [
     { subject: "Литература", room: "", teacher: "Любовь Евгеньевна" },
     { subject: "Математика", room: "", teacher: "Любовь Евгеньевна" },
@@ -2034,7 +2160,7 @@ const WEEK_SCHEDULE_EVA = [
   []
 ];
 
-// Расписание Димы (9Б) — кабинеты и учителя
+// Расписание Димы (9Б)
 const WEEK_SCHEDULE_DIMA = [
   [
     { subject: "Разговоры о важном", room: "16", teacher: "Уварова Ю.В." },
@@ -2092,8 +2218,6 @@ const MONTH_GEN = ["января","февраля","марта","апреля","
 const STORAGE_KEY = "diary_html_v15";
 
 // ==================== ПРОФИЛИ ====================
-// Ева — основной (по умолчанию), с Д/З, без оценок
-// Дима — второй, только расписание, без Д/З, без оценок
 const PROFILES = {
   eva: {
     name: "Бакулина Ева Алексеевна",
@@ -2105,7 +2229,7 @@ const PROFILES = {
     showEmail: false,
     showGrades: false,
     showQuarters: false,
-    showHW: true,          // у Евы ЕСТЬ Д/З
+    showHW: true,
     showScoreBar: false,
     bellType: "eva",
     schedule: WEEK_SCHEDULE_EVA
@@ -2120,14 +2244,13 @@ const PROFILES = {
     showEmail: true,
     showGrades: false,
     showQuarters: false,
-    showHW: false,         // у Димы НЕТ Д/З
+    showHW: false,
     showScoreBar: false,
     bellType: "dima",
     schedule: WEEK_SCHEDULE_DIMA
   }
 };
 
-// ==================== СОСТОЯНИЕ ====================
 let state = loadState();
 let currentWeekStart = null;
 let calMonth = null;
@@ -2305,10 +2428,7 @@ function updateFamilySelection() {
 }
 
 function switchUser(user) {
-  if (user === currentUser) {
-    closeFamily();
-    return;
-  }
+  if (user === currentUser) { closeFamily(); return; }
   currentUser = user;
   state.user = user;
   saveState();
@@ -2317,13 +2437,10 @@ function switchUser(user) {
   refreshUIToUser();
   closeFamily();
   closeProfile();
-
-  // У обоих только расписание, но всё равно переключаемся на него
   const scheduleBtn = document.getElementById("tabBtnSchedule");
   switchTab("schedule", scheduleBtn);
 }
 
-// Применяем цветовую тему пользователя
 function applyUserTheme() {
   const header = document.getElementById("mainHeader");
   const weekInfo = document.getElementById("weekInfo");
@@ -2335,7 +2452,6 @@ function applyUserTheme() {
   const nowBar = document.getElementById("nowBar");
 
   if (currentUser === "dima") {
-    // Дима — синяя тема
     header.classList.add("dima");
     weekInfo.classList.add("dima");
     btnToday.classList.add("dima");
@@ -2345,7 +2461,6 @@ function applyUserTheme() {
     tabQuarters.classList.add("dima");
     nowBar.classList.add("dima");
   } else {
-    // Ева — розовая (по умолчанию)
     header.classList.remove("dima");
     weekInfo.classList.remove("dima");
     btnToday.classList.remove("dima");
@@ -2359,15 +2474,10 @@ function applyUserTheme() {
 
 function refreshUIToUser() {
   const p = getProfile();
-
-  // Вкладки оценок и четвертных — только если разрешено (у обоих false)
   document.getElementById("tabBtnGrades").classList.toggle("hidden", !p.showGrades);
   document.getElementById("tabBtnQuarters").classList.toggle("hidden", !p.showQuarters);
-
-  // Средний балл
   document.getElementById("scoreBar").classList.toggle("hidden", !p.showScoreBar);
 
-  // Аватар в шапке
   document.getElementById("avatarSvg").outerHTML = currentUser === "dima"
     ? getDimaAvatarSVG().replace("<svg", '<svg id="avatarSvg"')
     : getEvaAvatarSVG().replace("<svg", '<svg id="avatarSvg"');
@@ -2571,7 +2681,7 @@ function plural5(n) {
   return "пятёрок";
 }
 
-// ==================== РЕНДЕР ОЦЕНОК (только если разрешено) ====================
+// ==================== РЕНДЕР ОЦЕНОК ====================
 function render() {
   if (!getProfile().showGrades) return;
   const dates = getCurrentDates();
@@ -2846,7 +2956,6 @@ function renderSchedule() {
   let headHTML = '<th class="num-col">№</th><th class="time-col">Время</th>';
   dates.forEach((d, i) => {
     const isToday = isSameDay(d, today);
-    // Формат: "22 октября"
     const dateStr = `${d.getDate()} ${MONTH_GEN[d.getMonth()]}`;
     headHTML += `<th>
       <span class="day-name">${DAY_NAMES[i]}</span>
@@ -2882,7 +2991,6 @@ function renderSchedule() {
         if (lesson.room) html += `<div class="room">каб. ${lesson.room}</div>`;
         if (lesson.teacher) html += `<div class="teacher">${lesson.teacher}</div>`;
 
-        // Кнопка Д/З — только если у пользователя есть Д/З
         if (showHW && hasHomework(lesson.subject)) {
           const dateKey = isoKey(date);
           const hwKey = `${dateKey}|${day}|${slot}`;
@@ -3333,7 +3441,6 @@ applyUserTheme();
 activeQuarter = getCurrentQuarter();
 currentWeekStart = getMondayOfDate(new Date());
 
-// Вкладки: оценки/четвертные скрыты у обоих
 document.getElementById("tabBtnGrades").classList.add("hidden");
 document.getElementById("tabBtnQuarters").classList.add("hidden");
 document.getElementById("tabBtnSchedule").classList.add("active");
