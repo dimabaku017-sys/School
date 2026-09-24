@@ -57,6 +57,7 @@
     min-height: 100vh;
     transition: background .3s var(--ease), color .3s var(--ease);
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
   /* ============ Шапка ============ */
@@ -293,7 +294,7 @@
   .risk-bar .risk-item .need { color: var(--green); font-weight: 700; }
   [data-theme="dark"] .risk-bar .risk-item .need { color: #66bb6a; }
 
-  /* ============ Табы — крупные, на всю ширину ============ */
+  /* ============ Табы ============ */
   .tabs {
     display: flex;
     background: var(--panel);
@@ -333,7 +334,7 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* ============ Кнопки управления ============ */
+  /* ============ Кнопки ============ */
   .controls {
     background: var(--panel);
     padding: 10px 14px;
@@ -368,7 +369,6 @@
   .btn.green  { background: #43a047; }
   .btn.green:active { background: #2e7d32; }
 
-  /* Переключатель четверти */
   .quarter-switcher {
     display: inline-flex;
     align-items: center;
@@ -432,7 +432,7 @@
   .btn.today.dima { background: #ff9800; }
   .btn.remind { background: #8e24aa; }
 
-  /* ============ Таблица оценок (со скроллом) ============ */
+  /* ============ Таблица оценок ============ */
   .table-wrap {
     background: var(--panel);
     border-radius: 0 0 12px 12px;
@@ -636,17 +636,86 @@
   .quarter-weights { font-size: 9px; color: #78909c; font-weight: normal; display: block; margin-top: 2px; }
   [data-theme="dark"] .quarter-weights { color: var(--text-mute); }
 
-  /* ============ Расписание — КАРТОЧКАМИ ПО ДНЯМ ============ */
+  /* ============================================================
+     ============ РАСПИСАНИЕ — СВАЙП ВЛЕВО-ВПРАВО ===============
+     ============================================================ */
   .schedule-wrap {
     background: var(--panel);
     border-radius: 0 0 12px 12px;
     box-shadow: var(--shadow-md);
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    padding: 12px 12px 8px;
+    overflow: hidden;
+    position: relative;
   }
 
+  /* Горизонтальный скролл-снап для карточек дней */
+  .day-scroll {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 14px;
+
+    /* ВИДИМЫЙ ПОЛЗУНОК — Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) var(--border);
+  }
+
+  /* WebKit-браузеры: Chrome, Samsung Internet, Edge, Opera */
+  .day-scroll::-webkit-scrollbar {
+    height: 8px;
+  }
+  .day-scroll::-webkit-scrollbar-track {
+    background: var(--border);
+    border-radius: 999px;
+    margin: 0 4px;
+  }
+  .day-scroll::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+    border-radius: 999px;
+    border: 1px solid var(--panel);
+  }
+  .day-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
+  }
+
+  /* Синий ползунок для Димы */
+  .day-scroll.dima {
+    scrollbar-color: var(--blue) var(--border);
+  }
+  .day-scroll.dima::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, var(--blue), #0d47a1);
+  }
+
+  /* Навигация-точки под каруселью */
+  .day-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 10px;
+    padding: 4px 0;
+  }
+  .day-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: .25s var(--ease);
+    cursor: pointer;
+    border: none;
+    padding: 0;
+  }
+  .day-dot.active {
+    background: var(--primary);
+    width: 22px;
+    border-radius: 999px;
+  }
+  .day-dot.dima.active { background: var(--blue); }
+
+  /* Карточка дня */
   .day-card {
     background: var(--panel);
     border: 1px solid var(--border);
@@ -654,6 +723,11 @@
     overflow: hidden;
     box-shadow: var(--shadow-sm);
     transition: .2s var(--ease);
+    flex: 0 0 calc(100% - 8px);
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    display: flex;
+    flex-direction: column;
   }
   .day-card.today {
     border-color: var(--primary);
@@ -663,9 +737,7 @@
     border-color: var(--blue);
     box-shadow: 0 0 0 2px var(--blue-soft), var(--shadow-md);
   }
-  .day-card.day-off-card {
-    background: var(--bg);
-  }
+  .day-card.day-off-card { background: var(--bg); }
   .day-card.day-off-card.holiday { background: #fff3e0; border-color: #ffcc80; }
   [data-theme="dark"] .day-card.day-off-card.holiday { background: var(--orange-soft); }
   .day-card.day-off-card.weekend { background: #f5f5f5; }
@@ -681,6 +753,9 @@
     background: linear-gradient(180deg, var(--primary-soft), transparent);
     border-bottom: 1px solid var(--border);
     gap: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 2;
   }
   .day-card.dima .day-head {
     background: linear-gradient(180deg, var(--blue-soft), transparent);
@@ -714,7 +789,7 @@
   }
 
   .day-off-text {
-    padding: 16px 14px;
+    padding: 24px 14px;
     text-align: center;
     color: var(--text-mute);
     font-style: italic;
@@ -728,6 +803,8 @@
   .day-off-text.vacation { color: #2e7d32; }
   [data-theme="dark"] .day-off-text.vacation { color: #66bb6a; }
 
+  .lessons-list { flex: 1; }
+
   .lesson-row {
     display: flex;
     gap: 10px;
@@ -738,6 +815,14 @@
   .lesson-row:last-child { border-bottom: none; }
   .lesson-row:active { background: var(--primary-soft); }
   .day-card.dima .lesson-row:active { background: var(--blue-soft); }
+
+  .lesson-row.dynamic-pause {
+    background: #f0f4f8;
+    color: var(--text-soft);
+    font-style: italic;
+  }
+  [data-theme="dark"] .lesson-row.dynamic-pause { background: #1a2130; }
+  .lesson-row.dynamic-pause .subj { color: var(--text-soft) !important; font-style: italic; }
 
   .lesson-num {
     display: flex;
@@ -766,6 +851,14 @@
   }
   [data-theme="dark"] .lesson-num .num { color: #f48fb1; }
   [data-theme="dark"] .day-card.dima .lesson-num .num { color: #82b1ff; }
+  .lesson-row.dynamic-pause .lesson-num .num {
+    background: #cfd8dc;
+    color: #607d8b;
+  }
+  [data-theme="dark"] .lesson-row.dynamic-pause .lesson-num .num {
+    background: #2a3446;
+    color: var(--text-soft);
+  }
   .lesson-num .time {
     font-size: 10px;
     color: var(--text-mute);
@@ -871,7 +964,7 @@
   }
   [data-theme="dark"] .hw-photo-thumb { border-color: var(--border); }
 
-  /* ============ Модалки — снизу, как шторка ============ */
+  /* ============ Модалки ============ */
   .modal-bg {
     position: fixed;
     inset: 0;
@@ -907,7 +1000,6 @@
     from { transform: translateY(100%); }
     to   { transform: translateY(0); }
   }
-  /* Ручка сверху */
   .modal::before {
     content: "";
     display: block;
@@ -982,7 +1074,6 @@
   .modal .type-btn .hint { display: block; font-size: 10px; font-weight: normal; color: #999; margin-top: 2px; }
   .modal .type-btn.selected .hint { color: inherit; opacity: 0.7; }
 
-  /* Кнопки действий — крупные, прибиты внизу */
   .modal .actions {
     display: flex;
     justify-content: center;
@@ -1042,7 +1133,6 @@
   [data-theme="dark"] .modal textarea { border-color: var(--border); }
   .modal textarea:focus { outline: 2px solid var(--primary); border-color: var(--primary); }
 
-  /* Фото в Д/З */
   .hw-photo-area { margin-bottom: 12px; text-align: left; }
   .hw-photo-area .photo-label-row {
     display: flex; align-items: center; justify-content: space-between;
@@ -1571,7 +1661,10 @@
     .btn { padding: 9px 18px; font-size: 14px; min-height: auto; }
     .week-info { padding: 12px 28px; flex-direction: row; justify-content: space-between; align-items: center; }
     .week-nav .btn { padding: 6px 14px; font-size: 13px; min-height: auto; flex: 0 0 auto; }
-    .schedule-wrap { padding: 14px; gap: 14px; }
+    .schedule-wrap { padding: 14px 14px 10px; }
+
+    /* Расписание — карточки шире и с отступами */
+    .day-card { flex: 0 0 340px; }
     .day-head { padding: 14px 18px; }
     .day-head .day-name { font-size: 16px; }
     .lesson-row { padding: 14px 18px; gap: 14px; }
@@ -1580,8 +1673,11 @@
     .lesson-num .time { font-size: 11px; }
     .lesson-body .subj { font-size: 15px; }
     .lesson-body .meta { font-size: 13px; }
+    .day-dots { gap: 8px; }
+    .day-dot { width: 10px; height: 10px; }
+    .day-dot.active { width: 26px; }
 
-    /* Модалки — снова по центру */
+    /* Модалки по центру */
     .modal-bg {
       align-items: center;
       padding: 12px;
@@ -1625,7 +1721,7 @@
     .cal-cell { padding: 10px 6px; font-size: 13px; min-height: auto; }
     .toast-wrap { left: auto; right: 16px; top: 16px; max-width: 380px; }
     .toast { max-width: 380px; }
-    .day-card .day-off-text { padding: 20px; }
+    .day-card .day-off-text { padding: 30px 20px; }
   }
 </style>
 </head>
@@ -1734,8 +1830,9 @@
       <button class="btn remind" onclick="openReminders()">🔔 <span id="remindBadge" class="badge empty">0</span></button>
     </div>
   </div>
-  <div class="schedule-wrap" id="scheduleWrap">
-    <!-- карточки по дням рендерятся JS -->
+  <div class="schedule-wrap">
+    <div class="day-scroll" id="scheduleWrap"></div>
+    <div class="day-dots" id="dayDots"></div>
   </div>
   <div class="tomorrow-hw" id="tomorrowHW">
     <div class="th-title" id="thTitle">📝 Задано на завтра</div>
@@ -1930,13 +2027,15 @@ const WEIGHT_KR = 2;
 const QUARTER_WEIGHTS = { 1: 1, 2: 1, 3: 2, 4: 2 };
 const TARGET_AVG = 3.50;
 
+// Звонки Евы (1 класс) — 3 урока + динамическая пауза
 const BELLS_EVA = [
-  { start: "08:30", end: "09:10" },
-  { start: "09:25", end: "10:05" },
-  { start: "10:20", end: "11:00" },
-  { start: "11:15", end: "11:55" }
+  { start: "08:30", end: "09:05" },
+  { start: "09:25", end: "10:00" },
+  { start: "10:10", end: "10:50", isPause: true },  // Динамическая пауза
+  { start: "11:00", end: "11:35" }
 ];
 
+// Звонки Димы (9 класс)
 const BELLS_DIMA = [
   { start: "08:30", end: "09:10" },
   { start: "09:30", end: "10:10" },
@@ -1952,7 +2051,8 @@ function timeToMin(t) {
   return h * 60 + m;
 }
 
-const NO_HOMEWORK_SUBJECTS = ["Разговоры о важном", "Физкультура"];
+// Д/З теперь доступно и для «Разговоры о важном» и «Физкультура»
+const NO_HOMEWORK_SUBJECTS = [];
 function hasHomework(subject) { return !NO_HOMEWORK_SUBJECTS.includes(subject); }
 
 const HOLIDAYS = [
@@ -2014,48 +2114,54 @@ const DATES_BY_QUARTER_DEFAULT = {
   4: ["01.04","03.04","06.04","08.04","10.04","13.04","15.04","17.04","20.04","22.04","24.04","27.04","29.04","04.05","06.05"]
 };
 
+// Расписание Евы (1Б) — 3 урока + динамическая пауза, учитель Власова Л.Е.
 const WEEK_SCHEDULE_EVA = [
+  // Понедельник: Разговоры о важном, Физкультура, Динамическая пауза, Русский язык
   [
-    { subject: "Разговоры о важном", room: "", teacher: "Любовь Евгеньевна" },
-    { subject: "Физкультура", room: "", teacher: "Любовь Евгеньевна" },
-    { subject: "Русский язык", room: "", teacher: "Любовь Евгеньевна" },
-    { subject: "Технология/Изо", room: "", teacher: "Любовь Евгеньевна" },
+    { subject: "Разговоры о важном", room: "", teacher: "Власова Л.Е." },
+    { subject: "Физкультура", room: "", teacher: "Власова Л.Е." },
+    { subject: "Динамическая пауза", room: "", teacher: "", isPause: true },
+    { subject: "Русский язык", room: "", teacher: "Власова Л.Е." },
     { subject: "", room: "", teacher: "" },
     { subject: "", room: "", teacher: "" },
     { subject: "", room: "", teacher: "" }
   ],
+  // Вторник: Литература, Математика, Динамическая пауза, Музыка/Русский язык
   [
-    { subject: "Литература", room: "", teacher: "Любовь Евгеньевна" },
-    { subject: "Математика", room: "", teacher: "Любовь Евгеньевна" },
-    { subject: "Музыка/Русский язык", room: "", teacher: "Любовь Евгеньевна" },
-    { subject: "", room: "", teacher: "" },
+    { subject: "Литература", room: "", teacher: "Власова Л.Е." },
+    { subject: "Математика", room: "", teacher: "Власова Л.Е." },
+    { subject: "Динамическая пауза", room: "", teacher: "", isPause: true },
+    { subject: "Музыка/Русский язык", room: "", teacher: "Власова Л.Е." },
     { subject: "", room: "", teacher: "" },
     { subject: "", room: "", teacher: "" },
     { subject: "", room: "", teacher: "" }
   ],
+  // Среда: Физкультура, Математика, Динамическая пауза, Русский язык
   [
-    { subject: "Физкультура", room: "", teacher: "Любовь Евгеньевна" },
-    { subject: "Математика", room: "", teacher: "Любовь Евгеньевна" },
-    { subject: "Русский язык", room: "", teacher: "Любовь Евгеньевна" },
-    { subject: "", room: "", teacher: "" },
+    { subject: "Физкультура", room: "", teacher: "Власова Л.Е." },
+    { subject: "Математика", room: "", teacher: "Власова Л.Е." },
+    { subject: "Динамическая пауза", room: "", teacher: "", isPause: true },
+    { subject: "Русский язык", room: "", teacher: "Власова Л.Е." },
     { subject: "", room: "", teacher: "" },
     { subject: "", room: "", teacher: "" },
     { subject: "", room: "", teacher: "" }
   ],
+  // Четверг: Литература, Русский язык, Динамическая пауза, Подвижные игры
   [
-    { subject: "Литература", room: "", teacher: "Любовь Евгеньевна" },
-    { subject: "Русский язык", room: "", teacher: "Любовь Евгеньевна" },
-    { subject: "Подвижные игры", room: "", teacher: "Любовь Евгеньевна" },
-    { subject: "", room: "", teacher: "" },
+    { subject: "Литература", room: "", teacher: "Власова Л.Е." },
+    { subject: "Русский язык", room: "", teacher: "Власова Л.Е." },
+    { subject: "Динамическая пауза", room: "", teacher: "", isPause: true },
+    { subject: "Подвижные игры", room: "", teacher: "Власова Л.Е." },
     { subject: "", room: "", teacher: "" },
     { subject: "", room: "", teacher: "" },
     { subject: "", room: "", teacher: "" }
   ],
+  // Пятница: Литература, Математика, Динамическая пауза, Окружающий мир
   [
-    { subject: "Литература", room: "", teacher: "Любовь Евгеньевна" },
-    { subject: "Математика", room: "", teacher: "Любовь Евгеньевна" },
-    { subject: "Окружающий мир", room: "", teacher: "Любовь Евгеньевна" },
-    { subject: "", room: "", teacher: "" },
+    { subject: "Литература", room: "", teacher: "Власова Л.Е." },
+    { subject: "Математика", room: "", teacher: "Власова Л.Е." },
+    { subject: "Динамическая пауза", room: "", teacher: "", isPause: true },
+    { subject: "Окружающий мир", room: "", teacher: "Власова Л.Е." },
     { subject: "", room: "", teacher: "" },
     { subject: "", room: "", teacher: "" },
     { subject: "", room: "", teacher: "" }
@@ -2118,7 +2224,7 @@ const DAY_NAMES = ["Понедельник", "Вторник", "Среда", "Ч
 const MONTH_NAMES = ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
 const MONTH_GEN = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
 
-const STORAGE_KEY = "diary_html_v16";
+const STORAGE_KEY = "diary_html_v18";
 
 const PROFILES = {
   eva: {
@@ -2374,7 +2480,6 @@ function refreshUIToUser() {
     ? getDimaAvatarSVG().replace("<svg", '<svg id="avatarSvg"')
     : getEvaAvatarSVG().replace("<svg", '<svg id="avatarSvg"');
 
-  document.getElementById("theme-color")?.remove();
   const metaTheme = document.querySelector('meta[name="theme-color"]');
   if (metaTheme) metaTheme.setAttribute("content", currentUser === "dima" ? "#1976d2" : "#ec407a");
 
@@ -2410,10 +2515,9 @@ function updateNowBar() {
     const lesson = lessons[i];
     if (!lesson || !lesson.subject) continue;
     if (nowMin >= s && nowMin < e) {
-      const room = lesson.room ? `, каб. ${lesson.room}` : "";
-      textEl.textContent = `${lesson.subject}${room} · до ${bell.end}`;
+      textEl.textContent = `${lesson.subject} · до ${bell.end}`;
       timeEl.textContent = `${e - nowMin} мин`;
-      iconEl.textContent = "📘";
+      iconEl.textContent = lesson.isPause ? "🏃" : "📘";
       bar.classList.add("active", "lesson");
       return;
     }
@@ -2424,8 +2528,7 @@ function updateNowBar() {
     const nextLesson = lessons[i + 1];
     if (!nextLesson || !nextLesson.subject) continue;
     if (nowMin >= curEnd && nowMin < nextStart) {
-      const room = nextLesson.room ? `, каб. ${nextLesson.room}` : "";
-      textEl.textContent = `Перемена · ${nextLesson.subject}${room} в ${bells[i + 1].start}`;
+      textEl.textContent = `Перемена · ${nextLesson.subject} в ${bells[i + 1].start}`;
       timeEl.textContent = `${nextStart - nowMin} мин`;
       iconEl.textContent = "☕";
       bar.classList.add("active", "break");
@@ -2437,8 +2540,7 @@ function updateNowBar() {
   if (firstLesson && firstLesson.subject && nowMin < firstBellStart) {
     const diff = firstBellStart - nowMin;
     if (diff <= 90) {
-      const room = firstLesson.room ? `, каб. ${firstLesson.room}` : "";
-      textEl.textContent = `Скоро: ${firstLesson.subject}${room} в ${bells[0].start}`;
+      textEl.textContent = `Скоро: ${firstLesson.subject} в ${bells[0].start}`;
       timeEl.textContent = `через ${diff} мин`;
       iconEl.textContent = "⏰";
       bar.classList.add("active", "soon");
@@ -2476,6 +2578,7 @@ function renderTomorrowHW() {
   const items = [];
   lessons.forEach((lesson, slotIdx) => {
     if (!lesson || !lesson.subject) return;
+    if (lesson.isPause) return;
     if (!hasHomework(lesson.subject)) return;
     const hwKey = `${dateKey}|${tomDayIdx}|${slotIdx}`;
     const text = (state.homework[hwKey] || "").trim();
@@ -2822,13 +2925,14 @@ function switchTab(name, btn) {
   if (name === "grades") render();
 }
 
-// ==================== РАСПИСАНИЕ — карточки по дням ====================
+// ==================== РАСПИСАНИЕ — карточки с горизонтальным свайпом ====================
 function getWeekDates(monday) { return [0,1,2,3,4,5,6].map(i => addDays(monday, i)); }
 
 function renderSchedule() {
   if (!currentWeekStart) currentWeekStart = getMondayOfDate(new Date());
   const dates = getWeekDates(currentWeekStart);
   const wrap = document.getElementById("scheduleWrap");
+  const dotsWrap = document.getElementById("dayDots");
   const today = new Date(); today.setHours(0,0,0,0);
 
   const bells = getBells();
@@ -2836,18 +2940,21 @@ function renderSchedule() {
   const showHW = getProfile().showHW;
 
   wrap.innerHTML = "";
+  dotsWrap.innerHTML = "";
   wrap.classList.toggle("dima", currentUser === "dima");
+
+  const todayIdx = dates.findIndex(d => isSameDay(d, today));
 
   dates.forEach((date, dayIdx) => {
     const card = document.createElement("div");
     card.className = "day-card";
+    card.setAttribute("data-day-idx", dayIdx);
     if (isSameDay(date, today)) card.classList.add("today");
     if (currentUser === "dima") card.classList.add("dima");
 
     const dayInfo = getDayType(date);
     const dateStr = formatFull(date);
 
-    // Заголовок дня
     const head = document.createElement("div");
     head.className = "day-head";
     head.innerHTML = `
@@ -2856,7 +2963,6 @@ function renderSchedule() {
     `;
     card.appendChild(head);
 
-    // Если выходной/праздник/каникулы
     if (dayInfo.type !== "school") {
       card.classList.add("day-off-card", dayInfo.type);
       const off = document.createElement("div");
@@ -2867,20 +2973,28 @@ function renderSchedule() {
       return;
     }
 
-    // Уроки
     const lessons = schedule[dayIdx] || [];
+    const list = document.createElement("div");
+    list.className = "lessons-list";
+
     let count = 0;
+    let lessonNumber = 0; // счётчик РЕАЛЬНЫХ уроков (без пауз)
     lessons.forEach((lesson, slotIdx) => {
       if (!lesson || !lesson.subject) return;
       count++;
 
+      const isPause = !!lesson.isPause;
+      if (!isPause) lessonNumber++; // увеличиваем только для настоящих уроков
+
       const row = document.createElement("div");
       row.className = "lesson-row";
+      if (isPause) row.classList.add("dynamic-pause");
 
       const bell = bells[slotIdx];
+
       let html = `
         <div class="lesson-num">
-          <div class="num">${slotIdx + 1}</div>
+          <div class="num">${isPause ? "🏃" : lessonNumber}</div>
           <div class="time">${bell ? bell.start + "<br>" + bell.end : ""}</div>
         </div>
         <div class="lesson-body">
@@ -2891,7 +3005,8 @@ function renderSchedule() {
           </div>
       `;
 
-      if (showHW && hasHomework(lesson.subject)) {
+      // Динамическая пауза не имеет Д/З
+      if (showHW && !isPause && hasHomework(lesson.subject)) {
         const dateKey = isoKey(date);
         const hwKey = `${dateKey}|${dayIdx}|${slotIdx}`;
         const hwText = state.homework[hwKey] || "";
@@ -2917,7 +3032,7 @@ function renderSchedule() {
 
       html += `</div>`;
       row.innerHTML = html;
-      card.appendChild(row);
+      list.appendChild(row);
     });
 
     if (count === 0) {
@@ -2925,10 +3040,38 @@ function renderSchedule() {
       empty.className = "day-off-text";
       empty.textContent = "Нет уроков";
       card.appendChild(empty);
+    } else {
+      card.appendChild(list);
     }
 
     wrap.appendChild(card);
+
+    // Точка навигации
+    const dot = document.createElement("button");
+    dot.className = "day-dot";
+    if (currentUser === "dima") dot.classList.add("dima");
+    if (dayIdx === todayIdx) dot.classList.add("active");
+    dot.title = DAY_NAMES[dayIdx];
+    dot.onclick = () => {
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+    };
+    dotsWrap.appendChild(dot);
   });
+
+  // Обновляем активную точку при скролле
+  const dots = dotsWrap.querySelectorAll(".day-dot");
+  let raf = null;
+  wrap.addEventListener("scroll", () => {
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      const scrollLeft = wrap.scrollLeft;
+      const cardWidth = wrap.querySelector(".day-card")?.offsetWidth || 1;
+      const gap = 12;
+      const idx = Math.round(scrollLeft / (cardWidth + gap));
+      dots.forEach((d, i) => d.classList.toggle("active", i === idx));
+      raf = null;
+    });
+  }, { passive: true });
 
   const mon = dates[0], sun = dates[6];
   document.getElementById("weekLabel").textContent = `Неделя ${getWeekNumber(mon)}`;
@@ -2950,10 +3093,11 @@ function goToToday() { calMonth = new Date(); openCal(); }
 // ==================== Д/З ====================
 function openHW(dayIdx, slotIdx, dateKey) {
   if (!getProfile().showHW) return;
-  currentHW = { date: dateKey, dayIdx, slotIdx };
   const schedule = getSchedule();
-  const bells = getBells();
   const lesson = schedule[dayIdx][slotIdx];
+  if (lesson && lesson.isPause) return;
+  currentHW = { date: dateKey, dayIdx, slotIdx };
+  const bells = getBells();
   const hwKey = `${dateKey}|${dayIdx}|${slotIdx}`;
   document.getElementById("hwTitle").textContent = lesson.subject;
   document.getElementById("hwSub").textContent = `${DAY_NAMES[dayIdx]} • Урок ${slotIdx + 1} • ${bells[slotIdx].start}`;
